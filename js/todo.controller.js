@@ -1,44 +1,38 @@
 (function(){
   'use-strict';
-  function TodoController() {
+  function TodoController(TodoService) {
+    const ctrl = this;
+    ctrl.newTodo = '';
+    ctrl.list =[];
     
-    this.newTodo = '';
+    function getTodos() {
+      TodoService
+        .retrieve()
+        .then((response) => { 
+          ctrl.list = response;
+        });
+    }
+    
 
-    this.list =[{
-      'title': 'First todo Item!',
-      'completed': false,
-    },
-    {
-      'title': 'Second todo Item!',
-      'completed': true,
-    },
-    {
-      'title': 'Third todo Item!',
-      'completed': false,
-    },
-    {
-      'title': 'Fourth todo Item!',
-      'completed': false,
-    }];
-
-    this.addTodo = function() {
-      this.list.unshift({
-        'title': this.newTodo,
+    ctrl.addTodo = function() {
+      ctrl.list.unshift({
+        'title': ctrl.newTodo,
         'completed': false
       });
-      this.newTodo = '';
+      ctrl.newTodo = '';
     };
 
-    this.removeTodo = function (item, index) {
-      this.list.splice(index, 1);
+    ctrl.removeTodo = function (item, index) {
+      ctrl.list.splice(index, 1);
     };
 
-    this.getRemaining = function () {
-      return this.list.filter(function (item) { 
+    ctrl.getRemaining = function () {
+      return ctrl.list.filter(function (item) { 
         return !item.completed;
       });
     };
-    // console.log(this.list)
+    // console.log(ctrl.list)
+    getTodos();
   }
 
   angular
