@@ -13,17 +13,41 @@
         });
     }
     
-
+    // Modifying View
     ctrl.addTodo = function() {
-      ctrl.list.unshift({
-        'title': ctrl.newTodo,
-        'completed': false
-      });
-      ctrl.newTodo = '';
+      // Check if there is new content to add, otherwise don't POST
+      if(!ctrl.newTodo) {
+        return;
+      }
+
+      // POST request via the TodoService
+      TodoService
+        .create({
+          'title': ctrl.newTodo,
+          'completed': false
+        })
+        .then((res) => {
+          ctrl.list.unshift(res);
+          ctrl.newTodo = '';
+      });   
     };
 
     ctrl.removeTodo = function (item, index) {
-      ctrl.list.splice(index, 1);
+      TodoService
+        .remove(item)
+        .then((response) => {
+          ctrl.list.splice(index, 1);
+       });
+    };
+
+    ctrl.updateTodo = function (item, index) {
+      if (!item.title) {
+        ctrl.removeTodo(item, index);
+        return;
+      } 
+
+      TodoService
+        .update(item);
     };
 
     ctrl.getRemaining = function () {
@@ -31,7 +55,22 @@
         return !item.completed;
       });
     };
-    // console.log(ctrl.list)
+
+    // toggle state
+    ctrl.toggleState = function (item) {
+      TodoService
+        .update(item)
+        .then(
+          () => {
+
+          }, 
+          () => {
+            item.completed = !item.completed;
+          });
+
+    }
+
+    // console.log()
     getTodos();
   }
 

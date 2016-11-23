@@ -4,8 +4,12 @@
   function TodoService($http) {
     const API = "http://jsonplaceholder.typicode.com/todos/"
 
-    function create() {
-
+    function create(todo) {
+      return $http
+        .post(API, todo)
+        .then((res) => {
+          return res.data;
+        })
     }
     
     function retrieve() {
@@ -16,12 +20,21 @@
         });
     }
 
-    function update() {
-
+    function update(todo) {
+      return $http
+        .put(API + todo.id)
+        .then((response) => {
+        
+        return response.data;
+      });
     }
 
-    function remove() {
-
+    function remove(todo) {
+      return $http
+        .delete(API + todo.id)
+        .then((res) => {
+          return res.data;
+        });
     }
 
     return { create, retrieve, update, remove };
